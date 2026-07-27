@@ -58,6 +58,32 @@ export function initDatabase() {
       PRIMARY KEY (guild_id, user_id)
     );
 
+    CREATE TABLE IF NOT EXISTS user_text_stats (
+      guild_id TEXT NOT NULL,
+      user_id TEXT NOT NULL,
+      message_count INTEGER DEFAULT 0,
+      code_block_count INTEGER DEFAULT 0,
+      last_message_at DATETIME,
+      PRIMARY KEY (guild_id, user_id)
+    );
+
+    CREATE TABLE IF NOT EXISTS user_reputation (
+      guild_id TEXT NOT NULL,
+      user_id TEXT NOT NULL,
+      rep_points INTEGER DEFAULT 0,
+      thanks_received INTEGER DEFAULT 0,
+      PRIMARY KEY (guild_id, user_id)
+    );
+
+    CREATE TABLE IF NOT EXISTS reputation_logs (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      guild_id TEXT NOT NULL,
+      giver_id TEXT NOT NULL,
+      receiver_id TEXT NOT NULL,
+      reason TEXT,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
+
     CREATE TABLE IF NOT EXISTS reaction_roles (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       guild_id TEXT NOT NULL,
@@ -79,5 +105,5 @@ export function initDatabase() {
     );
   `);
 
-  console.log('[Curator DB] Database initialized with extended TempVoice & Stats tables.');
+  console.log('[Curator DB] Database initialized with Text, Reputation, and Voice telemetry tables.');
 }

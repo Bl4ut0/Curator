@@ -1,6 +1,6 @@
 # 📖 Curator — Complete Functionality & Feature Guide
 
-This guide details all available features, slash commands, interactive control panel buttons, companion text features, moderation tools, and advanced TempVoice capabilities implemented in **Curator**.
+This guide details all available features, slash commands, interactive control panel buttons, companion text features, leaderboards, community reputation tools, and moderation utilities implemented in **Curator**.
 
 ---
 
@@ -49,34 +49,36 @@ When a room owner **Locks** their dynamic voice channel:
 
 ---
 
-## 📢 4. Announcement & Button Role Engine
+## 🏆 4. Community Telemetry & Leaderboards
 
-### Embed Builder (`/embed send`)
-Create rich, customized embed announcements with:
-- Target channel selection
-- Title, body description (with markdown & `\n` support)
-- Custom Hex colors (e.g. `#5865F2`)
-- Main image URL & top-right thumbnail URL
-- Custom footer text
+Curator tracks community engagement metrics without external paywalls:
 
-### Unlimited Button Roles (`/buttonrole create`)
-Create self-service role assignment panels without Dyno/Carl paywalls:
-- Target channel & role selection
-- Custom button label, emoji, and style (Blue, Green, Gray, Red)
-- Clicking toggles the role on/off instantly with ephemeral status notifications.
+### Unified Leaderboard (`/leaderboard <category>`)
+- **🎙️ Voice Activity Time**: Top members ranked by time spent in dynamic voice rooms.
+- **💬 Text Chat Messages**: Top active chatters ranked by total message volume.
+- **💻 Code Snippets Shared**: Top developer contributors sharing formatted code blocks (` ``` `).
+- **⭐ Community Reputation**: Top helpful community members ranked by reputation points.
+
+### Helper Reputation & Kudos (`/thank` & `/reputation`)
+- **`/thank <member> [reason]`**: Grant 1 Reputation Point to a member who helped answer a coding question or debug an issue (6-hour cooldown per member).
+- **`/reputation [member]`**: View helper badges (`🌱 Newbie Contributor`, `🛠️ Active Helper`, `⭐ Senior Helper`, `💎 Master Helper`, `👑 Legendary Mentor`), total rep points, and code blocks shared.
 
 ---
 
-## 🛠️ 5. Butler Moderation & Utilities
+## 📢 5. Announcement & Button Role Engine
+
+### Embed Builder (`/embed send`)
+Create rich, customized embed announcements with target channel selection, title, body description, custom Hex colors, images, thumbnails, and footers.
+
+### Unlimited Button Roles (`/buttonrole create`)
+Create self-service role assignment panels without Dyno/Carl paywalls.
+
+---
+
+## 🛠️ 6. Butler Moderation & Utilities
 
 ### Mass Move (`/moveall`)
 - Relocate all members from a source voice channel to a target voice channel in one command.
 
 ### Selective Purge (`/purge`)
-- Bulk delete up to 100 messages with selective filters:
-  - `all`: Delete all messages
-  - `bots`: Delete bot messages only
-  - `users`: Exclude bot messages
-  - `links`: Delete messages containing URLs
-  - `files`: Delete messages containing attachments
-  - `target_user`: Filter by specific user
+- Bulk delete up to 100 messages with selective filters (`all`, `bots`, `users`, `links`, `files`, `target_user`).

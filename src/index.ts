@@ -12,7 +12,9 @@ import { initDatabase } from './db/database';
 import { handleVoiceStateUpdate } from './modules/tempvoice/voiceHandler';
 import { handleButtonInteraction, handleModalSubmit } from './modules/tempvoice/controlPanel';
 import { masterCommands } from './modules/tempvoice/commands';
-import { statsCommand } from './modules/tempvoice/stats';
+import { leaderboardCommand } from './modules/tempvoice/stats';
+import { handleMessageCreate } from './modules/telemetry/messageTracker';
+import { thankCommand, repCheckCommand } from './modules/telemetry/reputation';
 import { embedBuilderCommand } from './modules/announcements/embedBuilder';
 import { buttonRoleCommand, handleRoleButtonInteraction } from './modules/announcements/reactionRoles';
 import { purgeCommand } from './modules/moderation/purge';
@@ -36,7 +38,9 @@ const client = new Client({
 // Command Collection
 const commandsMap = new Map<string, any>([
   [masterCommands.data.name, masterCommands],
-  [statsCommand.data.name, statsCommand],
+  [leaderboardCommand.data.name, leaderboardCommand],
+  [thankCommand.data.name, thankCommand],
+  [repCheckCommand.data.name, repCheckCommand],
   [embedBuilderCommand.data.name, embedBuilderCommand],
   [buttonRoleCommand.data.name, buttonRoleCommand],
   [purgeCommand.data.name, purgeCommand],
@@ -73,10 +77,19 @@ client.once(Events.ClientReady, async (c) => {
   console.log(`[Curator] Logged in as ${c.user.tag}`);
   console.log(`[Curator] Curator Butler Engine is active and watching.`);
 
-  c.user.setActivity('over Voice Channels & Coding Hub', { type: ActivityType.Watching });
+  c.user.setActivity('over Voice, Text & Developer Community', { type: ActivityType.Watching });
 
   if (config.clientId) {
     await registerCommands();
+  }
+});
+
+// Message Listener for Telemetry & Code Block Tracking
+client.on(Events.MessageCreate, async (message) => {
+  try {
+    await handleMessageCreate(message);
+  } catch (err) {
+    console.error('[Curator Event] Error in messageCreate:', err);
   }
 });
 
