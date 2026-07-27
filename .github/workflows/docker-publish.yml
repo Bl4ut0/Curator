@@ -48,7 +48,7 @@ jobs:
             type=sha,format=short
 
       - name: Build and Push Docker Image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: .
           file: ./Dockerfile
@@ -68,4 +68,3 @@ jobs:
           repository: ${{ env.DOCKER_IMAGE_NAME }}
           short-description: "All-in-one self-hosted Discord Butler Bot with dynamic TempVoice channels, custom embeds, reaction roles, and moderation tools."
           readme-filepath: ./README.md
-
