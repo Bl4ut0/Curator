@@ -25,6 +25,7 @@ export function initDatabase() {
       default_name TEXT DEFAULT '{user}''s Room',
       user_limit INTEGER DEFAULT 0,
       create_companion_text INTEGER DEFAULT 1,
+      enable_waiting_room INTEGER DEFAULT 1,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     );
 
@@ -33,6 +34,7 @@ export function initDatabase() {
       guild_id TEXT NOT NULL,
       owner_id TEXT NOT NULL,
       text_id TEXT,
+      waiting_room_id TEXT,
       master_id TEXT NOT NULL,
       is_locked INTEGER DEFAULT 0,
       is_hidden INTEGER DEFAULT 0,
@@ -45,6 +47,14 @@ export function initDatabase() {
       preferred_name TEXT,
       preferred_limit INTEGER,
       is_locked INTEGER DEFAULT 0,
+      PRIMARY KEY (guild_id, user_id)
+    );
+
+    CREATE TABLE IF NOT EXISTS user_voice_stats (
+      guild_id TEXT NOT NULL,
+      user_id TEXT NOT NULL,
+      total_seconds INTEGER DEFAULT 0,
+      last_joined_at DATETIME,
       PRIMARY KEY (guild_id, user_id)
     );
 
@@ -69,5 +79,5 @@ export function initDatabase() {
     );
   `);
 
-  console.log('[Curator DB] Database initialized successfully.');
+  console.log('[Curator DB] Database initialized with extended TempVoice & Stats tables.');
 }

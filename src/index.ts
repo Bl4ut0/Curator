@@ -12,6 +12,7 @@ import { initDatabase } from './db/database';
 import { handleVoiceStateUpdate } from './modules/tempvoice/voiceHandler';
 import { handleButtonInteraction, handleModalSubmit } from './modules/tempvoice/controlPanel';
 import { masterCommands } from './modules/tempvoice/commands';
+import { statsCommand } from './modules/tempvoice/stats';
 import { embedBuilderCommand } from './modules/announcements/embedBuilder';
 import { buttonRoleCommand, handleRoleButtonInteraction } from './modules/announcements/reactionRoles';
 import { purgeCommand } from './modules/moderation/purge';
@@ -27,13 +28,15 @@ const client = new Client({
     GatewayIntentBits.GuildVoiceStates,
     GatewayIntentBits.GuildMessages,
     GatewayIntentBits.MessageContent,
-    GatewayIntentBits.GuildMembers
+    GatewayIntentBits.GuildMembers,
+    GatewayIntentBits.GuildPresences
   ]
 });
 
 // Command Collection
 const commandsMap = new Map<string, any>([
   [masterCommands.data.name, masterCommands],
+  [statsCommand.data.name, statsCommand],
   [embedBuilderCommand.data.name, embedBuilderCommand],
   [buttonRoleCommand.data.name, buttonRoleCommand],
   [purgeCommand.data.name, purgeCommand],
@@ -70,7 +73,7 @@ client.once(Events.ClientReady, async (c) => {
   console.log(`[Curator] Logged in as ${c.user.tag}`);
   console.log(`[Curator] Curator Butler Engine is active and watching.`);
 
-  c.user.setActivity('over Voice Channels & Guild', { type: ActivityType.Watching });
+  c.user.setActivity('over Voice Channels & Coding Hub', { type: ActivityType.Watching });
 
   if (config.clientId) {
     await registerCommands();
@@ -95,10 +98,8 @@ client.on(Events.InteractionCreate, async (interaction: Interaction) => {
         await command.execute(interaction);
       }
     } else if (interaction.isButton()) {
-      // Check if button role interaction
       const isRoleBtn = await handleRoleButtonInteraction(interaction);
       if (!isRoleBtn) {
-        // Handle temp voice control panel button
         await handleButtonInteraction(interaction);
       }
     } else if (interaction.isModalSubmit()) {

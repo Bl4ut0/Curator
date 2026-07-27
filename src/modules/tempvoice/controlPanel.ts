@@ -9,9 +9,7 @@ import {
   ButtonInteraction,
   ModalSubmitInteraction,
   GuildMember,
-  ChannelType,
   VoiceChannel,
-  TextChannel,
   PermissionFlagsBits
 } from 'discord.js';
 import { db } from '../../db/database';
@@ -81,11 +79,41 @@ export async function handleButtonInteraction(interaction: ButtonInteraction) {
   const member = interaction.member as GuildMember;
   if (!member || !interaction.guild) return;
 
+  // Handle Waiting Room Allow / Reject buttons
+  if (interaction.customId.startsWith('curator_waiting_allow_')) {
+    const parts = interaction.customId.split('_');
+    const targetVoiceId = parts[3];
+    const guestId = parts[4];
+
+    const voiceChannel = interaction.guild.channels.cache.get(targetVoiceId) as VoiceChannel;
+    const guestMember = interaction.guild.members.cache.get(guestId);
+
+    if (voiceChannel && guestMember) {
+      // Grant connect permission to guest
+      await voiceChannel.permissionOverwrites.edit(guestMember.id, { Connect: true, ViewChannel: true });
+
+      // Move guest if currently in waiting room
+      if (guestMember.voice.channelId) {
+        await guestMember.voice.setChannel(voiceChannel);
+      }
+
+      await interaction.reply({ content: `✅ Allowed <@${guestId}> into your room!`, ephemeral: true });
+    } else {
+      await interaction.reply({ content: '❌ Room or guest no longer available.', ephemeral: true });
+    }
+    return;
+  }
+
+  if (interaction.customId.startsWith('curator_waiting_reject_')) {
+    const guestId = interaction.customId.split('_')[3];
+    await interaction.reply({ content: `❌ Rejected entry request for <@${guestId}>.`, ephemeral: true });
+    return;
+  }
+
   // Find dynamic channel details
   const voiceState = member.voice;
   const currentVoiceId = voiceState.channelId;
 
-  // Check if member is in a voice channel
   if (!currentVoiceId) {
     return interaction.reply({
       content: '❌ You must be in your temporary voice channel to use the control panel.',
@@ -126,7 +154,6 @@ export async function handleButtonInteraction(interaction: ButtonInteraction) {
     });
   }
 
-  // Non-owners cannot alter channel settings
   if (!isOwner) {
     return interaction.reply({
       content: '❌ Only the channel owner can alter channel settings. (Click **Claim Ownership** if the owner left).',
@@ -233,7 +260,7 @@ export async function handleButtonInteraction(interaction: ButtonInteraction) {
     return;
   }
 
-  // Save Settings as Default Preference
+  // Save Settings
   if (interaction.customId === 'curator_temp_save_pref') {
     db.prepare(`
       INSERT INTO user_preferences (guild_id, user_id, preferred_name, preferred_limit, is_locked)
@@ -304,7 +331,6 @@ export async function handleModalSubmit(interaction: ModalSubmitInteraction) {
     }
 
     await targetMember.voice.disconnect(`Kicked by channel owner ${member.displayName}`);
-    // Revoke connect permissions for target member
     await voiceChannel.permissionOverwrites.edit(targetMember.id, { Connect: false });
 
     return interaction.reply({ content: `🚫 Kicked <@${targetMember.id}> from the channel and blocked reconnecting.`, ephemeral: true });
