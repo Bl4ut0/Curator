@@ -19,6 +19,17 @@ services:
     volumes:
       - curator-data:/app/data
 
+  # Optional: Automatic Container Updater (Watchtower)
+  # Automatically pulls new Docker Hub images and restarts Curator without downtime
+  watchtower:
+    image: containrrr/watchtower
+    container_name: curator-watchtower
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: --interval 300 curator-bot
+
 volumes:
   curator-data:
     driver: local
+

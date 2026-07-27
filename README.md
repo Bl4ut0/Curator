@@ -58,7 +58,10 @@ GUILD_ID=your_guild_id
 docker-compose up -d
 ```
 
+> **🔄 Automatic Updates**: `docker-compose.yml` includes an optional **Watchtower** container service that automatically checks for new Docker Hub builds every 5 minutes and updates your running bot seamlessly.
+
 ---
+
 
 ## 💻 Local Development Setup
 
