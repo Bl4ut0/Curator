@@ -1,0 +1,33 @@
+{
+  "name": "curator-discord-bot",
+  "version": "1.0.0",
+  "description": "All-in-one self-hosted Discord Butler Bot with dynamic channels, custom embeds, reaction roles, and moderation tools.",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "ts-node-dev --respawn --transpile-only src/index.ts"
+  },
+  "keywords": [
+    "discord",
+    "discord-bot",
+    "temp-voice",
+    "temp-channels",
+    "butler",
+    "self-hosted",
+    "open-source"
+  ],
+  "author": "Curator Project",
+  "license": "MIT",
+  "dependencies": {
+    "better-sqlite3": "^11.8.1",
+    "discord.js": "^14.18.0",
+    "dotenv": "^16.4.7"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.12",
+    "@types/node": "^22.13.4",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.7.3"
+  }
+}

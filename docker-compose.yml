@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  curator:
+    image: bl4ut0/curator:latest
+    # To build locally instead of pulling from Docker Hub, uncomment the build section below:
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile
+    container_name: curator-bot
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - DISCORD_TOKEN=${DISCORD_TOKEN}
+      - CLIENT_ID=${CLIENT_ID}
+      - GUILD_ID=${GUILD_ID}
+      - DATABASE_PATH=/app/data/curator.db
+    volumes:
+      - curator-data:/app/data
+
+volumes:
+  curator-data:
+    driver: local
